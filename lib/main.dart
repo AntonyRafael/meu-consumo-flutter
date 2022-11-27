@@ -6,11 +6,11 @@ import 'home.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: DashboardPage(),
+    home: const DashboardPage(),
     routes: {
-      'register': (context) => MyRegister(),
-      'login': (context) => MyLogin(),
-      'dashboard': (context) => DashboardPage(),
+      'register': (context) => const MyRegister(),
+      'login': (context) => const MyLogin(),
+      'dashboard': (context) => const DashboardPage(),
     },
   ));
 }

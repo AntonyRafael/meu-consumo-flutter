@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DashboardPage extends StatefulWidget {
   static const String id = "dashboard_page";
@@ -9,6 +10,19 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPage extends State<DashboardPage> {
+  TextEditingController waterFlow = TextEditingController();
+  String timeValue = '00:00:00';
+  String waterFlowValue = '00.00';
+
+  changeText() {
+    // function to calculate thwe water flow and time.
+    // TODO: calculate the water flow and time. in a setTimeInterval
+    setState(() {
+      timeValue = '00:00:01';
+      waterFlowValue = waterFlow.text;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,9 +89,17 @@ class _DashboardPage extends State<DashboardPage> {
                       Container(
                         margin: const EdgeInsets.only(
                             left: 45, right: 45, top: 20, bottom: 0),
-                        child: const TextField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: 'Vazão'),
+                        child: TextFormField(
+                          controller: waterFlow,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9.]')),
+                          ],
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Vazão de água',
+                              hintText: 'Ex: 7.5'),
                         ),
                       ),
                       const SizedBox(
@@ -99,7 +121,7 @@ class _DashboardPage extends State<DashboardPage> {
                             ]),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
                               "Tempo de uso",
                               style: TextStyle(
@@ -110,11 +132,12 @@ class _DashboardPage extends State<DashboardPage> {
                             SizedBox(
                               height: 10,
                             ),
+                            // text with the dinamic value of the time
                             Text(
-                              "00:00:00",
+                              timeValue,
                               style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 30,
+                                color: Color.fromARGB(255, 13, 141, 161),
+                                fontSize: 40,
                               ),
                             ),
                             Text(
@@ -127,7 +150,7 @@ class _DashboardPage extends State<DashboardPage> {
                               height: 10,
                             ),
                             Text(
-                              "0.00",
+                              waterFlowValue,
                               style: TextStyle(
                                   color: Color.fromARGB(255, 13, 141, 161),
                                   fontSize: 40),
@@ -148,7 +171,7 @@ class _DashboardPage extends State<DashboardPage> {
                         height: 35,
                       ),
                       MaterialButton(
-                        onPressed: () {},
+                        onPressed: () => changeText(),
                         height: 45,
                         minWidth: 240,
                         shape: const StadiumBorder(),
