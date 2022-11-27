@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,15 +13,34 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPage extends State<DashboardPage> {
   TextEditingController waterFlow = TextEditingController();
-  String timeValue = '00:00:00';
+  String timeValue = '00:00';
+  var time = const Duration(hours: 0, minutes: 0, seconds: 0);
+  var timeToCalculate = 0;
+  var priceValue = 0.0;
+  var seconds = 0;
+  var minutes = 0;
+  var consumPerMinute = 0.0;
   String waterFlowValue = '00.00';
 
   changeText() {
     // function to calculate thwe water flow and time.
     // TODO: calculate the water flow and time. in a setTimeInterval
-    setState(() {
-      timeValue = '00:00:01';
-      waterFlowValue = waterFlow.text;
+    Timer setTimeOut = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        seconds = seconds + 1;
+        if (seconds == 60) {
+          seconds = 0;
+          minutes = minutes + 1;
+        }
+        timeValue = minutes.toString() + ':' + seconds.toString();
+        if (waterFlow.text != '' && waterFlow.text != '0') {
+          var consumPerSecond = double.parse(waterFlow.text) / 60;
+          var actualCosumValue = consumPerMinute + consumPerSecond;
+          var price = actualCosumValue.toDouble() * 0.0044;
+          priceValue = price;
+          consumPerMinute = actualCosumValue.ceilToDouble();
+        }
+      });
     });
   }
 
@@ -133,12 +154,35 @@ class _DashboardPage extends State<DashboardPage> {
                               height: 10,
                             ),
                             // text with the dinamic value of the time
-                            Text(
-                              timeValue,
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 13, 141, 161),
-                                fontSize: 40,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  minutes > 9
+                                      ? minutes.toString()
+                                      : "0" + minutes.toString(),
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 13, 141, 161),
+                                    fontSize: 40,
+                                  ),
+                                ),
+                                Text(
+                                  ":",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 13, 141, 161),
+                                    fontSize: 40,
+                                  ),
+                                ),
+                                Text(
+                                  seconds > 9
+                                      ? seconds.toString()
+                                      : "0" + seconds.toString(),
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 13, 141, 161),
+                                    fontSize: 40,
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
                               "Consumo atual",
@@ -150,7 +194,7 @@ class _DashboardPage extends State<DashboardPage> {
                               height: 10,
                             ),
                             Text(
-                              waterFlowValue,
+                              consumPerMinute.toString(),
                               style: TextStyle(
                                   color: Color.fromARGB(255, 13, 141, 161),
                                   fontSize: 40),
