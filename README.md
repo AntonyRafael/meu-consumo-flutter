@@ -1,6 +1,6 @@
-# meuconsumo
+# Meu consumo 🚰
 
-A new Flutter project.
+Uma aplicação feita em flutter para controlar os gastos com água em sua residência e mensurar o qunato foi gasto.
 
 ## Getting Started
 
